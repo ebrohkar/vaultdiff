@@ -1,0 +1,11 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+Thumbs.db
+*.out
+*.prof
+*.test
+vendor/
+.DS_Store
