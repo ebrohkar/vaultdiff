@@ -25,6 +25,16 @@ func TestPromoteSecret_EmptyDestPath(t *testing.T) {
 	}
 }
 
+func TestPromoteSecret_SameSourceAndDest(t *testing.T) {
+	_, err := PromoteSecret(context.Background(), nil, nil, PromoteOptions{
+		SourcePath: "secret/data/staging/app",
+		DestPath:   "secret/data/staging/app",
+	})
+	if err == nil {
+		t.Fatal("expected error when source and dest paths are identical")
+	}
+}
+
 func TestPromoteResult_Fields(t *testing.T) {
 	r := &PromoteResult{
 		SourcePath:  "secret/data/staging/app",
