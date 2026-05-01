@@ -14,6 +14,11 @@ type VersionMeta struct {
 	Destroyed    bool
 }
 
+// IsDeleted returns true if the version has been deleted or destroyed.
+func (v VersionMeta) IsDeleted() bool {
+	return v.Destroyed || v.DeletionTime != ""
+}
+
 // ListSecretVersions returns metadata for all versions of a KV v2 secret.
 func (c *Client) ListSecretVersions(ctx context.Context, mount, path string) ([]VersionMeta, error) {
 	secretPath := fmt.Sprintf("%s/metadata/%s", mount, path)
@@ -47,9 +52,9 @@ func (c *Client) ListSecretVersions(ctx context.Context, mount, path string) ([]
 		fmt.Sscanf(versionStr, "%d", &num)
 
 		meta := VersionMeta{
-			Version:     num,
-			Destroyed:   boolVal(vMap, "destroyed"),
-			CreatedTime: stringVal(vMap, "created_time"),
+			Version:      num,
+			Destroyed:    boolVal(vMap, "destroyed"),
+			CreatedTime:  stringVal(vMap, "created_time"),
 			DeletionTime: stringVal(vMap, "deletion_time"),
 		}
 		metas = append(metas, meta)
